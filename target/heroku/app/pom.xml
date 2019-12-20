@@ -1,0 +1,121 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+
+<groupId>com.github.delenko</groupId>
+<artifactId>bot</artifactId>
+<version>1.0-SNAPSHOT</version>
+
+<repositories>
+    <repository>
+        <id>jcenter</id>
+        <name>jcenter</name>
+        <url>http://jcenter.bintray.com/</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>net.dv8tion</groupId>
+        <artifactId>JDA</artifactId>
+        <version>4.0.0_39</version>
+    </dependency>
+    <dependency>
+        <groupId>com.jagrosh</groupId>
+        <artifactId>jda-utilities</artifactId>
+        <version>3.0.1</version>
+        <type>pom</type>
+    </dependency>
+    <dependency>
+        <groupId>io.github.cdimascio</groupId>
+        <artifactId>java-dotenv</artifactId>
+        <version>5.1.1</version>
+    </dependency>
+</dependencies>
+
+<build>
+    <sourceDirectory>src/main/java</sourceDirectory>
+    <resources>
+        <resource>
+            <targetPath>.</targetPath>
+            <filtering>true</filtering>
+            <directory>${basedir}/src/main/resources/</directory>
+            <includes>
+                <include>*</include>
+            </includes>
+        </resource>
+    </resources>
+    <plugins>
+        <plugin>
+            <groupId>com.heroku.sdk</groupId>
+            <artifactId>heroku-maven-plugin</artifactId>
+            <version>2.0.8</version>
+            <configuration>
+                <appName>calm-gorge-40419</appName>
+                <processTypes>
+                    <worker>java -jar ./target/bot-1.0-SNAPSHOT-jar-with-dependencies.jar</worker>
+                </processTypes>
+            </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.5.1</version>
+            <configuration>
+                <source>1.8</source>
+                <target>1.8</target>
+            </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+                <execution>
+                    <id>copy-resource-one</id>
+                    <phase>validate</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                   <configuration>
+                       <outputDirectory>${basedir}/target/classes/</outputDirectory>
+                       <includeEmptyDirs>true</includeEmptyDirs>
+                       <resources>
+                           <resource>
+                               <directory>${basedir}/src/main/resources/</directory>
+                               <filtering>false</filtering>
+                               <includes>
+                                   <include>configenv.env</include>
+                               </includes>
+                           </resource>
+                       </resources>
+                   </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>single</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <archive>
+                    <manifest>
+                        <mainClass>com.github.delenko.Bot</mainClass>
+                    </manifest>
+                </archive>
+                <descriptorRefs>
+                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+</project>
